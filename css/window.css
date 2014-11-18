@@ -2,16 +2,13 @@ html,
 body {
 	padding: 0;
 	margin: 0;
+	height: 100%;
 }
 .window_boundingBox {
 	position: fixed;
 	border: 1px solid #000;
-	/*width: 500px;
-	height: 300px;
-	left: 50%;
-	margin-left: -250px;*/
-	top: 100px;
 	box-shadow: 0 0 12px rgba(0, 0, 0, 0.5);
+	background: #fff; /*如果不设置背景色，mask的背景色会被透出来*/
 }
 .window_header {
 	background: #333;
@@ -38,4 +35,13 @@ body {
 	font-size: 20px;
 	background: blue;
 	cursor: pointer;
+}
+.window_mask {
+	width: 100%;
+	height: 100%;
+	background: #000;
+	opacity: 0.5;
+	position: absolute;
+	top: 0;
+	left: 0;
 }

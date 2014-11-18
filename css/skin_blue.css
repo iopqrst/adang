@@ -1,0 +1,26 @@
+.skin_blue.window_boundingBox {
+	border: 15px #666 solid;
+	border-radius: 10px;
+}
+.skin_blue .window_header {
+	background: #ff00ef;
+	text-align: left;
+}
+.skin_blue .window_body {
+	font-family: "微软雅黑";
+	font-size: 25px;
+	font-weight: bolder;
+}
+.skin_blue .window_alterBtn {
+	text-align: center;
+	margin-left: 0;
+	left: auto;
+	right: 20px;
+	background: #ff0000;
+	height: 40px;
+	line-height: 40px;
+	padding: 0px;
+}
+.skin_blue .window_closeBtn {
+	border-radius: 50%;
+}
