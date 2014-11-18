@@ -7,7 +7,8 @@ require.config({
 
 require(['jquery', 'window'], function($, w) {
 	$("a:first").click(function() {
-		new w.Window().alert({
+		var win = new w.Window();
+		win.alert({
 			width: 500,
 			height: 200,
 			btn4Alert: 'OK Beng!!',
@@ -24,5 +25,23 @@ require(['jquery', 'window'], function($, w) {
 				alert('you close the diaog!');
 			}
 		});
+		
+		win.on('alert', function(){
+			alert('alert-自定义事件的第1个方法');
+		}).on('alert', function(){
+			alert('alert-自定义事件的第2个方法');
+		}).on('alert', function(){
+			alert('alert-自定义事件的第3个方法');
+		});
+		
+		win.on('close', function(){
+			alert('close-自定义事件的第1个方法');
+		});
+		
+		win.on('close', function(){
+			alert('close-自定义事件的第2个方法');
+		});
 	});
+	
+	
 });
