@@ -13,17 +13,31 @@ define(['widget', 'jquery', 'jquery_ui'], function(widget, $, $ui) {
 			content: '',
 			hasMask: true,
 			btn4Alert: '确定',
+			btn4Confirm: '确定',
+			btn4Cancel: '取消',
 			hasCloseBtn: false,
 			skinClassName: '',
 			isDraggable: false,
 			fn4AlterBtn: function() {},
-			fn4CloseBtn: function() {}
+			fn4CloseBtn: function() {},
+			fn4ConfirmBtn: function() {},
+			fn4CancelBtn: function() {}
 		}
 	}
 
 	Window.prototype = $.extend({}, new widget.Widget(), {
 		renderUI: function() {
-			this.boundingBox = $('<div class="window_boundingBox">' + '<div class="window_header">' + this.cfg.title + '</div>' + '<div class="window_body">' + this.cfg.content + '</div>' + '<div class = "window_footer">' + '<input type = "button" class = "window_alterBtn" value ="' + this.cfg.btn4Alert + '" /></div></div>');
+
+			var footerContent = '';
+			switch (this.cfg.winType) {
+				case "alert":
+					footerContent = '<input type="button" value="' + this.cfg.btn4Alert + '" class="window_alterBtn"/>';
+					break;
+				case "confirm":
+					footerContent = '<input type="button" value="' + this.cfg.btn4Confirm + '" class="window_confirmBtn"/><input type="button" value="' + this.cfg.btn4Cancel + '" class="window_cancelBtn"/>';
+			}
+
+			this.boundingBox = $('<div class="window_boundingBox">' + '<div class="window_header">' + this.cfg.title + '</div>' + '<div class="window_body">' + this.cfg.content + '</div>' + '<div class = "window_footer">' + footerContent + '</div></div>');
 
 			if (this.cfg.hasMask) {
 				this._mask = $('<div class = "window_mask"></div>');
@@ -44,6 +58,12 @@ define(['widget', 'jquery', 'jquery_ui'], function(widget, $, $ui) {
 			this.boundingBox.delegate(".window_alterBtn", "click", function() {
 				that.fire("alert");
 				that.destory();
+			}).delegate(".window_confirmBtn", "click", function() {
+				that.fire("confirm");
+				that.destory();
+			}).delegate(".window_cancelBtn", "click", function() {
+				that.fire("cancel");
+				that.destory();
 			}).delegate(".window_closeBtn", "click", function() {
 				that.fire("close");
 				that.destory();
@@ -57,6 +77,16 @@ define(['widget', 'jquery', 'jquery_ui'], function(widget, $, $ui) {
 			//关闭回调函数
 			if (this.cfg.fn4CloseBtn) {
 				this.on("close", this.cfg.fn4CloseBtn);
+			}
+
+			//confirm 确认函数
+			if (this.cfg.fn4ConfirmBtn) {
+				this.on("confirm", this.cfg.fn4ConfirmBtn);
+			}
+
+			//confirm 取消函数
+			if (this.cfg.fn4CancelBtn) {
+				this.on("cancel", this.cfg.fn4CancelBtn);
 			}
 		},
 		syncUI: function() {
@@ -87,7 +117,12 @@ define(['widget', 'jquery', 'jquery_ui'], function(widget, $, $ui) {
 			this._mask && this._mask.remove();
 		},
 		alert: function(cfg) {
-			$.extend(this.cfg, cfg);
+			$.extend(this.cfg, cfg, {winType:'alert'});
+			this.render();
+			return this;
+		},
+		confirm: function(cfg) {
+			$.extend(this.cfg, cfg, {winType:'confirm'});
 			this.render();
 			return this;
 		}

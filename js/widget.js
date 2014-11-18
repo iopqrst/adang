@@ -1,6 +1,7 @@
 define(['jquery'], function() {
 	function Widget() {
 		this.boundingBox = null; //属性：最外层容器
+		
 	};
 
 	Widget.prototype = {
@@ -26,11 +27,10 @@ define(['jquery'], function() {
 			return this;
 		},
 		render: function(container) { //方法：渲染组件
-			this.handlers = {}; //事件库
+			this.handlers = {}; //事件库（如果放到widget方法体内会有问题，可以试试看）
 			this.renderUI();
 			this.bindUI();
 			this.syncUI();
-
 			$(container || document.body).append(this.boundingBox);
 		},
 		destory: function() {

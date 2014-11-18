@@ -13,10 +13,10 @@ require(['jquery', 'window'], function($, w) {
 			height: 200,
 			btn4Alert: 'OK Beng!!',
 			hasCloseBtn: true,
-			skinClassName: 'skin_blue',
+			skinClassName: '',
 			hasMask: true,
 			isDraggable: true,
-			draggableHandle : '.window_header', //设置拖拽目标为标题部分（默认为整个框体）
+			draggableHandle: '.window_header', //设置拖拽目标为标题部分（默认为整个框体）
 			content: "Welcome my alert",
 			fn4AlertBtn: function() {
 				alert('you click alert btn!');
@@ -25,23 +25,59 @@ require(['jquery', 'window'], function($, w) {
 				alert('you click close btn!');
 			}
 		});
-		
-		win.on('alert', function(){
+
+		win.on('alert', function() {
 			alert('alert-自定义事件的第1个方法');
-		}).on('alert', function(){
+		}).on('alert', function() {
 			alert('alert-自定义事件的第2个方法');
-		}).on('alert', function(){
+		}).on('alert', function() {
 			alert('alert-自定义事件的第3个方法');
 		});
-		
-		win.on('close', function(){
+
+		win.on('close', function() {
 			alert('close-自定义事件的第1个方法');
 		});
-		
-		win.on('close', function(){
+
+		win.on('close', function() {
 			alert('close-自定义事件的第2个方法');
 		});
 	});
-	
-	
+
+	$("a:last").click(function() {
+		var win = new w.Window();
+		win.confirm({
+			width: 500,
+			height: 200,
+			hasCloseBtn: true,
+			skinClassName: '',
+			btn4Confirm: '确定',
+			btn4Cancel: '取消',
+			hasMask: true,
+			isDraggable: true,
+			draggableHandle: '.window_header', //设置拖拽目标为标题部分（默认为整个框体）
+			content: "Welcome my confirm",
+			fn4ConfirmBtn: function() {
+				alert('click confirm btn');
+			},
+			fn4CancelBtn: function() {
+				alert('click cancel btn');
+			}
+		});
+
+		win.on('confirm', function() {
+			alert('confirm-自定义事件的第1个方法');
+		}).on('confirm', function() {
+			alert('confirm-自定义事件的第2个方法');
+		}).on('confirm', function() {
+			alert('confirm-自定义事件的第3个方法');
+		});
+
+		win.on('cancel', function() {
+			alert('cancel-自定义事件的第1个方法');
+		});
+
+		win.on('cancel', function() {
+			alert('cancel-自定义事件的第2个方法');
+		});
+	});
 });
