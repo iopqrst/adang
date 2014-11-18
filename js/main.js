@@ -17,13 +17,7 @@ require(['jquery', 'window'], function($, w) {
 			hasMask: true,
 			isDraggable: true,
 			draggableHandle : '.window_header', //设置拖拽目标为标题部分（默认为整个框体）
-			content: "Welcome my alert",
-			fn4AlterBtn: function() {
-				alert('oh fucking , you click me!');
-			},
-			fn4CloseBtn: function() {
-				alert('you close the diaog!');
-			}
+			content: "Welcome my alert"
 		});
 		
 		win.on('alert', function(){
