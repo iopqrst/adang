@@ -13,11 +13,17 @@ require(['jquery', 'window'], function($, w) {
 			height: 200,
 			btn4Alert: 'OK Beng!!',
 			hasCloseBtn: true,
-			skinClassName: '',
+			skinClassName: 'skin_blue',
 			hasMask: true,
 			isDraggable: true,
 			draggableHandle : '.window_header', //设置拖拽目标为标题部分（默认为整个框体）
-			content: "Welcome my alert"
+			content: "Welcome my alert",
+			fn4AlertBtn: function() {
+				alert('you click alert btn!');
+			},
+			fn4CloseBtn: function() {
+				alert('you click close btn!');
+			}
 		});
 		
 		win.on('alert', function(){

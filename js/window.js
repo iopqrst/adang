@@ -1,4 +1,8 @@
-define(['widget', 'jquery', 'jquery_ui'], function(widget, $, $ui) { //$UI其实没有什么作用，仅仅为了require引入参数能对应上
+/**
+ * //$UI其实没有什么作用，仅仅为了require引入参数能对应上
+ */
+define(['widget', 'jquery', 'jquery_ui'], function(widget, $, $ui) {
+
 	function Window() {
 		this.cfg = {
 			left: 0,
@@ -11,76 +15,82 @@ define(['widget', 'jquery', 'jquery_ui'], function(widget, $, $ui) { //$UI其实
 			btn4Alert: '确定',
 			hasCloseBtn: false,
 			skinClassName: '',
-			isDraggable: false
-		};
-
-		this.handlers = {};
-	};
+			isDraggable: false,
+			fn4AlterBtn: function() {},
+			fn4CloseBtn: function() {}
+		}
+	}
 
 	Window.prototype = $.extend({}, new widget.Widget(), {
-		alert: function(cfg) {
-			var _cfg = $.extend(this.cfg, cfg);
-			var box = '<div class="window_boundingBox">' + '<div class="window_header">' + _cfg.title + '</div>' + '<div class="window_body">' + _cfg.content + '</div>' + '<div class="window_footer">' + '<input type="button" class="window_alterBtn" value="' + _cfg.btn4Alert + '"/></div>' + '</div>';
+		renderUI: function() {
+			this.boundingBox = $('<div class="window_boundingBox">' + '<div class="window_header">' + this.cfg.title + '</div>' + '<div class="window_body">' + this.cfg.content + '</div>' + '<div class = "window_footer">' + '<input type = "button" class = "window_alterBtn" value ="' + this.cfg.btn4Alert + '" /></div></div>');
 
-			var that = this;
-
-			//添加遮罩
-			var $mask = null;
-			if (_cfg.hasMask) {
-				$mask = $('<div class="window_mask"></div>');
-				$mask.appendTo("body");
+			if (this.cfg.hasMask) {
+				this._mask = $('<div class = "window_mask"></div>');
+				this._mask.appendTo("body");
 			}
 
-			$boundingBox = $(box);
-			$boundingBox.appendTo("body");
-			$boundingBox.css({
-				width: _cfg.width + 'px',
-				height: _cfg.height + 'px',
-				left: (_cfg.left || ((window.innerWidth - _cfg.width) / 2)) + 'px',
-				top: (_cfg.top || (window.innerHeight - _cfg.height) / 2) + 'px'
+			if (this.cfg.hasCloseBtn) {
+				var closeBtn = $('<span class="window_closeBtn">X</span > ');
+				//把关闭按钮添加到header中（其实添加在最外层的盒子中也行）
+				closeBtn.appendTo(this.boundingBox.find('.window_header '));
+			}
+
+			this.boundingBox.appendTo(document.body);
+		},
+		bindUI: function() {
+			var that = this;
+
+			this.boundingBox.delegate(".window_alterBtn", "click", function() {
+				that.fire("alert");
+				that.destory();
+			}).delegate(".window_closeBtn", "click", function() {
+				that.fire("close");
+				that.destory();
+			});
+
+			//执行完成后回调函数
+			if (this.cfg.fn4AlterBtn) {
+				this.on("alter", this.cfg.fn4AlterBtn);
+			}
+
+			//关闭回调函数
+			if (this.cfg.fn4CloseBtn) {
+				this.on("close", this.cfg.fn4CloseBtn);
+			}
+		},
+		syncUI: function() {
+			this.boundingBox.css({
+				"width": this.cfg.width + "px",
+				"height": this.cfg.height + "px",
+				"left": (this.cfg.left || ((window.innerWidth - this.cfg.width) / 2)) + "px",
+				"top": (this.cfg.top || (window.innerHeight - this.cfg.height) / 2) + "px"
 			});
 
 			// 设置皮肤
-			if (_cfg.skinClassName) {
-				$boundingBox.addClass(_cfg.skinClassName);
+			if (this.cfg.skinClassName) {
+				this.boundingBox.addClass(this.cfg.skinClassName);
 			}
 
 			// 设置拖拽
-			if (_cfg.isDraggable) {
-				if (_cfg.draggableHandle) { //设置了拖拽目标
-					$boundingBox.draggable({
-						handle: _cfg.draggableHandle
+			if (this.cfg.isDraggable) {
+				if (this.cfg.draggableHandle) { //设置了拖拽目标
+					this.boundingBox.draggable({
+						handle: this.cfg.draggableHandle
 					});
 				} else { //没有设置为整体可拖拽
-					$boundingBox.draggable();
+					this.boundingBox.draggable();
 				}
 			}
-
-			// 关闭按钮
-			if (_cfg.hasCloseBtn) {
-				var closeBtn = $('<span class="window_closeBtn">X</span>');
-				//把关闭按钮添加到header中（其实添加在最外层的盒子中也行）
-				closeBtn.appendTo($boundingBox.find('.window_header'));
-				closeBtn.click(function() {
-					//_cfg.fn4CloseBtn && _cfg.fn4CloseBtn(); //如果存在回调函数，则处理
-					that.fire('close');
-					$boundingBox.remove();
-					$mask && $mask.remove();
-				});
-			}
-
-			var $btn = $boundingBox.find('.window_footer input');
-			$btn.click(function() {
-				//_cfg.fn4AlterBtn && _cfg.fn4AlterBtn(); //如果存在回调函数，则处理
-				that.fire('alert');
-				$boundingBox.remove();
-				$mask && $mask.remove();
-			});
-
-			return this;
 		},
-		confirm: function() {},
-		prompt: function() {}
+		destructor: function() {
+			this._mask && this._mask.remove();
+		},
+		alert: function(cfg) {
+			$.extend(this.cfg, cfg);
+			this.render();
+			return this;
+		}
 
 	});
 

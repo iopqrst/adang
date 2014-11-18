@@ -1,11 +1,10 @@
-define(function() {
+define(['jquery'], function() {
 	function Widget() {
-		this.handlers = {};
+		this.boundingBox = null; //属性：最外层容器
 	};
 
 	Widget.prototype = {
 		on: function(events, handler) {
-			//上面的方式效果与以下相同，只不过下面的方式更好
 			this.handlers[events] = this.handlers[events] || [];
 			this.handlers[events].push(handler);
 
@@ -23,8 +22,26 @@ define(function() {
 					handler[i](data);
 				}
 			}
+
 			return this;
-		}
+		},
+		render: function(container) { //方法：渲染组件
+			this.handlers = {}; //事件库
+			this.renderUI();
+			this.bindUI();
+			this.syncUI();
+
+			$(container || document.body).append(this.boundingBox);
+		},
+		destory: function() {
+			this.destructor();
+			this.boundingBox.off();
+			this.boundingBox.remove();
+		},
+		renderUI: function() {}, //接口：添加dom节点
+		bindUI: function() {}, //接口：监听事件
+		syncUI: function() {}, //接口：初始化组件属性
+		destructor: function() {} //
 	};
 
 	return {
